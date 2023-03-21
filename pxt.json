@@ -1,0 +1,23 @@
+{
+    "name": "RfidID",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "pxt-calliope-grovePCF85063tp": "github:callitgs3/pxt-calliope-grovepcf85063tp#8b83ee3c53bf55a70a51fd3abfa5a51d564c37f1",
+        "pxt-rfid-rc522": "github:callitgs3/pxt-rfid-rc522#63b643d7089caf4008030ead037102c52637089c",
+        "OLED12864_I2C": "github:callitgs3/oled12864_i2c#bffab279a7302996f6fdcb9b3e477101234c0603"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "supportedTargets": [
+        "calliopemini"
+    ],
+    "preferredEditor": "blocksprj"
+}
