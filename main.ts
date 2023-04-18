@@ -1,18 +1,22 @@
 function SucheIdKommen (Id: number) {
-    for (let Index = 0; Index <= id_list.length; Index++) {
-        if (id_list[Index] == Id) {
-            return Index
+    for (let Index2 = 0; Index2 <= id_list.length; Index2++) {
+        if (id_list[Index2] == Id) {
+            return Index2
         }
     }
     id_list.push(Id)
-    return id_list.length
+    listGehenZeit.push("0")
+    listKommenZeit.push("0")
+    return id_list.length - 1
 }
 radio.onReceivedNumber(function (receivedNumber) {
     Uhrzeit = PCF85063TP.getTime()
     datum = PCF85063TP.getDate()
-    pos = SucheId(receivedNumber)
+    pos = SucheIdKommen(receivedNumber)
+    AnzeigeNr = pos
     listKommenZeit[pos] = Uhrzeit
     listDatum[pos] = datum
+    listGehenZeit[pos] = "0"
 })
 function loading () {
     OLED12864_I2C.circle(
@@ -53,17 +57,6 @@ function loading () {
     )
     OLED12864_I2C.clear()
 }
-function SucheId (Id: number) {
-    for (let Index2 = 0; Index2 <= id_list.length; Index2++) {
-        if (id_list[Index2] == Id) {
-            return Index2
-        }
-    }
-    id_list.push(Id)
-    listGehenZeit.push("0")
-    listKommenZeit.push("0")
-    return id_list.length - 1
-}
 input.onButtonPressed(Button.A, function () {
     if (AnzeigeNr == 0) {
         AnzeigeNr = id_list.length - 1
@@ -71,6 +64,14 @@ input.onButtonPressed(Button.A, function () {
         AnzeigeNr += -1
     }
 })
+function SucheIdGehen (Id: number) {
+    for (let Index = 0; Index <= id_list.length; Index++) {
+        if (id_list[Index] == Id) {
+            return Index
+        }
+    }
+    return -1
+}
 input.onButtonPressed(Button.AB, function () {
     if (1 == Menu) {
         Menu = 0
@@ -95,13 +96,13 @@ function OLED () {
     OLED12864_I2C.showString(
     3,
     2,
-    "Kommen:" + listKommenZeit,
+    "Kommen:" + listKommenZeit[AnzeigeNr],
     1
     )
     OLED12864_I2C.showString(
     3,
     3,
-    "Gehen: " + listGehenZeit[AnzeigeNr] + " ",
+    "Gehen: " + listGehenZeit[AnzeigeNr] + "  ",
     1
     )
     OLED12864_I2C.showString(
@@ -119,58 +120,24 @@ function OLED () {
     OLED12864_I2C.showString(
     3,
     6,
-    "Anzeige Nummer: " + convertToText(AnzeigeNr),
-    1
-    )
-}
-function OLED2 () {
-    OLED12864_I2C.showString(
-    3,
-    1,
-    "Id:" + Id,
-    1
-    )
-    OLED12864_I2C.showString(
-    3,
-    2,
-    "Kommen:" + listKommenZeit,
-    1
-    )
-    OLED12864_I2C.showString(
-    3,
-    3,
-    "Gehen: " + Uhrzeit + " ",
-    1
-    )
-    OLED12864_I2C.showString(
-    3,
-    4,
-    "Datum: " + datum,
-    1
-    )
-    OLED12864_I2C.showString(
-    3,
-    5,
-    "Gelesene Nummern: " + id_list.length,
-    1
-    )
-    OLED12864_I2C.showString(
-    3,
-    6,
-    "                  ",
+    "Anzeige Nummer: " + convertToText(1 + AnzeigeNr),
     1
     )
 }
 let Id = 0
 let Menu = 0
 let AnzeigeNr = 0
-let listKommenZeit: string[] = []
 let pos = 0
 let datum = ""
 let Uhrzeit = ""
+let listKommenZeit: string[] = []
 let listDatum: string[] = []
 let id_list: number[] = []
 let listGehenZeit: string[] = []
+pins.digitalWritePin(DigitalPin.P1, 1)
+pins.digitalWritePin(DigitalPin.P1, 0)
+basic.pause(100)
+pins.digitalWritePin(DigitalPin.P1, 1)
 radio.setGroup(1)
 serial.redirectToUSB()
 listGehenZeit = []
@@ -200,12 +167,10 @@ basic.forever(function () {
     if (Id != 0) {
         Uhrzeit = PCF85063TP.getTime()
         datum = PCF85063TP.getDate()
-        pos = SucheId(Id)
-        listGehenZeit[pos] = Uhrzeit
+        pos = SucheIdGehen(Id)
+        if (pos > -1) {
+            listGehenZeit[pos] = Uhrzeit
+        }
     }
-    if (Menu == 1) {
-        OLED()
-    } else {
-        OLED2()
-    }
+    OLED()
 })
