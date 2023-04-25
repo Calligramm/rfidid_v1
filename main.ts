@@ -96,13 +96,13 @@ function OLED () {
     OLED12864_I2C.showString(
     3,
     2,
-    "Kommen:" + listKommenZeit[AnzeigeNr] + "     ",
+    Zeichenkette.auffuellen("Kommen:" + listKommenZeit[AnzeigeNr], "", 20),
     1
     )
     OLED12864_I2C.showString(
     3,
     3,
-    "Gehen: " + listGehenZeit[AnzeigeNr] + "     ",
+    Zeichenkette.auffuellen("Gehen: " + listGehenZeit[AnzeigeNr], " ", 20),
     1
     )
     OLED12864_I2C.showString(
@@ -114,7 +114,7 @@ function OLED () {
     OLED12864_I2C.showString(
     3,
     5,
-    "Gelesene Nummern: " + id_list.length,
+    Zeichenkette.auffuellen("Gelesene Nummern: " + id_list.length, "", 20),
     1
     )
     OLED12864_I2C.showString(
